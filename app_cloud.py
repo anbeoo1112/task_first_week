@@ -1,6 +1,10 @@
 import streamlit as st
 import os
 import tempfile
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 from core.pipeline import DocumentAIProcessor
 
@@ -73,11 +77,17 @@ if uploaded_file and process_btn:
         with st.spinner("🔍 Đang xử lý với Document AI..."):
             result = processor.run(tmp_path)
         
-        st.success("✅ Xử lý thành công!")
-        st.divider()
-        
-        # Kết quả
-        icons = {"identity": "🪪", "vehicle": "🚗", "finance": "💰"}
+        # Kiểm tra lỗi
+        if result["classification"] == "Lỗi xử lý":
+            st.error("❌ Lỗi xử lý!")
+            st.warning(f"📋 Chi tiết: {result}")
+            st.info("💡 Vui lòng chờ 30 giây rồi thử lại nếu là Rate Limit.")
+        else:
+            st.success("✅ Xử lý thành công!")
+            st.divider()
+            
+            # Kết quả
+            icons = {"identity": "🪪", "vehicle": "🚗", "finance": "💰"}
         names = {"identity": "Tùy thân", "vehicle": "Phương tiện", "finance": "Tài chính"}
         
         col1, col2, col3 = st.columns(3)

@@ -15,7 +15,8 @@ load_dotenv()
 class DocumentAIProcessor:
     
     def __init__(self):
-        self.model = "ollama/qwen2.5:3b"
+        # Gemini API (AI Studio): gemini/model-name
+        self.model = "gemini/gemini-2.0-flash"
         self.project_id = os.getenv("DOCUMENTAI_PROJECT_ID")
         self.location = os.getenv("DOCUMENTAI_LOCATION", "us")
         self.processor_id = os.getenv("DOCUMENTAI_PROCESSOR_ID")
@@ -81,6 +82,7 @@ class DocumentAIProcessor:
             
             category = category_result.name
             print(f"   → Nhóm: {category}")
+            print(f"   → Classification Raw: {category_result}")
             
             # === BƯỚC 2: Phân loại LOẠI cụ thể trong nhóm ===
             print("🔍 Bước 2: Phân loại loại văn bản...")
@@ -122,6 +124,8 @@ class DocumentAIProcessor:
                     )
                     data = extracted.model_dump() if extracted else None
                     print(f"   → Đã trích xuất {len(data) if data else 0} trường")
+                    if data:
+                        print(f"   → Data Raw: {data}")
                 except Exception as extract_err:
                     print(f"   ⚠️ Lỗi trích xuất: {extract_err}")
                     data = None

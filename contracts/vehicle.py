@@ -18,7 +18,6 @@ class VietnamDriverLicense(Contract):
 
 class VietnamVehicleReg(Contract):
     bien_so_xe: Optional[str] = Field(None, description="Biển số xe")
-    loai_xe: Optional[str] = Field(None, description="Loại xe")
     nhan_hieu: Optional[str] = Field(None, description="Nhãn hiệu")
     mau_xe: Optional[str] = Field(None, description="Màu xe")
     so_khung: Optional[str] = Field(None, description="Số khung")
