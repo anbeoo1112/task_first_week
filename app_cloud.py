@@ -15,41 +15,42 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("☁️ Phân loại Giấy tờ Việt Nam")
-st.markdown("*Sử dụng Google Document AI + Gemini*")
+st.title("Trích xuất thông tin từ giấy tờ")
+st.markdown("Sử dụng Google Document AI + Gemini")
 
 # Sidebar
 with st.sidebar:
-    st.header("⚙️ Thông tin")
+    st.header("Thông tin")
     
-    st.info("☁️ Chế độ Cloud")
-    st.caption("**OCR:** Google Document AI")
-    st.caption("**LLM:** Gemini 2.0 Flash")
-    st.caption("**Độ chính xác:** Cao")
+    st.info("Chế độ Cloud")
+    st.caption("OCR: Google Document AI")
+    st.caption("LLM: Gemini 2.0 Flash")
+    st.caption("Độ chính xác: Cao")
     
     st.divider()
     
-    st.markdown("### 📋 Văn bản hỗ trợ:")
+    st.markdown("### Văn bản hỗ trợ:")
     
-    with st.expander("🪪 Giấy tờ tùy thân"):
+    with st.expander("Giấy tờ tùy thân"):
         st.markdown("- CCCD / CMND")
         st.markdown("- Hộ chiếu")
         st.markdown("- Giấy khai sinh")
     
-    with st.expander("🚗 Giấy tờ phương tiện"):
+    with st.expander("Giấy tờ phương tiện"):
         st.markdown("- Bằng lái xe")
         st.markdown("- Đăng ký xe")
         st.markdown("- Đăng kiểm")
     
-    with st.expander("💰 Giấy tờ tài chính"):
+    with st.expander("Giấy tờ tài chính"):
         st.markdown("- Hợp đồng")
+        st.markdown("- Bill chuyển khoản")
 
 # Main content
 st.divider()
 
 # Upload file
 uploaded_file = st.file_uploader(
-    "📤 Upload file (PDF hoặc ảnh)",
+    "Upload file (PDF hoặc ảnh)",
     type=["pdf", "png", "jpg", "jpeg"],
 )
 
@@ -57,11 +58,11 @@ if uploaded_file:
     col1, col2 = st.columns([1, 2])
     
     with col1:
-        st.info(f"📄 **{uploaded_file.name}**")
+        st.info(f"{uploaded_file.name}")
         st.caption(f"Kích thước: {uploaded_file.size / 1024:.1f} KB")
     
     with col2:
-        process_btn = st.button("🚀 Xử lý", type="primary", use_container_width=True)
+        process_btn = st.button("Xử lý", type="primary", use_container_width=True)
 
 # Xử lý
 if uploaded_file and process_btn:
@@ -74,16 +75,16 @@ if uploaded_file and process_btn:
     try:
         processor = DocumentAIProcessor()
         
-        with st.spinner("🔍 Đang xử lý với Document AI..."):
+        with st.spinner("Đang xử lý với Document AI..."):
             result = processor.run(tmp_path)
         
         # Kiểm tra lỗi
         if result["classification"] == "Lỗi xử lý":
-            st.error("❌ Lỗi xử lý!")
-            st.warning(f"📋 Chi tiết: {result}")
-            st.info("💡 Vui lòng chờ 30 giây rồi thử lại nếu là Rate Limit.")
+            st.error("Lỗi xử lý!")
+            st.warning(f"Chi tiết: {result}")
+            st.info("Vui lòng chờ 30 giây rồi thử lại nếu là Rate Limit.")
         else:
-            st.success("✅ Xử lý thành công!")
+            st.success("Xử lý thành công!")
             st.divider()
             
             # Kết quả
@@ -128,12 +129,8 @@ if uploaded_file and process_btn:
             st.warning("Không trích xuất được dữ liệu")
                         
     except Exception as e:
-        st.error(f"❌ Lỗi: {str(e)}")
-        st.info("💡 Kiểm tra: credentials.json và cấu hình .env")
+        st.error(f"Lỗi: {str(e)}")
     finally:
         if os.path.exists(tmp_path):
             os.remove(tmp_path)
 
-# Footer
-st.divider()
-st.caption("☁️ VN Document | Cloud Mode | Google Document AI + Gemini")
