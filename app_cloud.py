@@ -13,7 +13,7 @@ st.set_page_config(
     page_title="VN Document - Cloud",
     page_icon="☁️",
     layout="wide"
-)
+)   
 
 st.title("Trích xuất thông tin từ giấy tờ")
 st.markdown("Sử dụng Google Document AI + Gemini")

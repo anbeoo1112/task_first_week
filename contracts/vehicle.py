@@ -23,6 +23,8 @@ class VietnamVehicleReg(Contract):
     so_khung: Optional[str] = Field(None, description="Số khung")
     so_may: Optional[str] = Field(None, description="Số máy")
     ten_chu_xe: Optional[str] = Field(None, description="Tên chủ xe")
+    so: Optional[str] = Field(None, description="Số đăng ký")
+    
 
 
 class VietnamInspection(Contract):
