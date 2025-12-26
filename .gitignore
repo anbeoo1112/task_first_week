@@ -14,6 +14,10 @@ __pycache__/
 *.pyd
 .Python
 *.so
+.eggs/
+*.egg-info/
+dist/
+build/
 
 # IDE
 .vscode/
@@ -23,3 +27,16 @@ __pycache__/
 *.tmp
 *.temp
 /tmp/
+
+# Environment
+environment.yml
+pyproject.toml
+
+# Test files
+test/*.pdf
+test/*.png
+test/*.jpg
+
+# Misc
+*.log
+.DS_Store

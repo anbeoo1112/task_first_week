@@ -22,7 +22,7 @@ The Concatenate strategy is designed to handle content that exceeds the LLM's co
 **3. Validation**
 
 - When LLM indicates completion (finish_reason="stop")
-- Validates the combined JSON response
+- Validates the combined JSON response  
 - Raises error if invalid JSON is received on completion
 
 **4. Response Processing**
