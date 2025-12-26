@@ -12,11 +12,11 @@ CATEGORY_META = {
 }
 
 def _buildNode(name: str, desc: str, docs: Dict) -> ClassificationNode:
-    """Build a category node with its document children"""
     children = [
         ClassificationNode(
             name=displayName,
-            classification=Classification(name=displayName, description=f"{desc}: {displayName}", contract=contractClass)
+            classification=Classification(name=displayName, description=f"{desc}: {displayName}", 
+            contract=contractClass)
         )
         for code, (displayName, contractClass) in docs.items()
     ]
@@ -38,7 +38,6 @@ CLASSIFICATION_TREE = ClassificationTree(nodes=[
 ])
 
 def getContractForDocType(categoryName: str, docTypeName: str) -> Optional[Type[Contract]]:
-    """Get contract class for a document type"""
     for node in CLASSIFICATION_TREE.nodes:
         if node.name == categoryName:
             for child in node.children:
@@ -61,7 +60,6 @@ CATEGORIES = {
 
 from typing import List
 def getClassificationsList() -> List[Classification]:
-    """Convert ClassificationTree to flat list of Classifications for split/classify"""
     result = []
     for node in CLASSIFICATION_TREE.nodes:
         if node.children:

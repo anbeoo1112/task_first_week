@@ -1,7 +1,3 @@
-"""
-Configuration - Centralized settings management
-Clean, type-safe configuration with dataclasses
-"""
 import os
 from dataclasses import dataclass, field
 from typing import Set, List
@@ -9,10 +5,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+EXCEL_EXT = {'.xlsx', '.xls', '.xlsm', '.xlsb', '.ods'}
+
 
 @dataclass(frozen=True)
 class OcrConfig:
-    """OCR-related configuration"""
     extensions: Set[str] = field(default_factory=lambda: {
         '.png', '.jpg', '.jpeg', '.tiff', '.gif', '.bmp', '.webp'
     })
@@ -25,7 +22,6 @@ class OcrConfig:
 
 @dataclass
 class DocumentAiConfig:
-    """Google Document AI configuration"""
     projectId: str = field(default_factory=lambda: os.getenv("DOCUMENTAI_PROJECT_ID", ""))
     location: str = field(default_factory=lambda: os.getenv("DOCUMENTAI_LOCATION", "us"))
     processorId: str = field(default_factory=lambda: os.getenv("DOCUMENTAI_PROCESSOR_ID", ""))
@@ -39,32 +35,71 @@ class DocumentAiConfig:
         if not self.processorId:
             missing.append("DOCUMENTAI_PROCESSOR_ID")
         return missing
+    
+    def createLoader(self):
+        """Create a new DocumentLoaderGoogleDocumentAI instance"""
+        from extract_thinker import DocumentLoaderGoogleDocumentAI, GoogleDocAIConfig
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self.credentialsPath
+        return DocumentLoaderGoogleDocumentAI(GoogleDocAIConfig(
+            project_id=self.projectId,
+            location=self.location,
+            processor_id=self.processorId,
+            credentials=self.credentialsPath,
+        ))
 
 
 @dataclass
 class ProcessingConfig:
-    """Processing settings"""
     model: str = field(default_factory=lambda: os.getenv("LLM_MODEL", "gemini/gemini-2.0-flash"))
-    maxPdfPages: int = field(default_factory=lambda: int(os.getenv("MAX_PDF_PAGES", "10")))
+    eagerPageThreshold: int = 10
     dpi: int = 300
     enableThinking: bool = False
 
 
 @dataclass
 class AppConfig:
-    """Main application configuration"""
     ocr: OcrConfig = field(default_factory=OcrConfig)
     documentAi: DocumentAiConfig = field(default_factory=DocumentAiConfig)
     processing: ProcessingConfig = field(default_factory=ProcessingConfig)
     
     def validate(self) -> None:
-        """Validate all required configurations"""
         missing = self.documentAi.validate()
         if missing:
             raise ValueError(
                 f"Missing environment variables: {', '.join(missing)}. "
                 "Please check your .env file"
             )
+    
+    def createLoader(self, filePath: str):
+        """
+        Create appropriate loader based on file type.
+        Returns: (loader, vision, loaderName)
+        """
+        from extract_thinker import DocumentLoaderPyPdf, DocumentLoaderSpreadSheet
+        
+        ext = os.path.splitext(filePath)[1].lower()
+        
+        # Image or scanned PDF -> DocAI
+        if self.ocr.isImageFile(filePath) or (ext == '.pdf' and not self._pdfHasText(filePath)):
+            return self.documentAi.createLoader(), True, "docai"
+        
+        # Excel files
+        if ext in EXCEL_EXT:
+            return DocumentLoaderSpreadSheet(), False, "spreadsheet"
+        
+        # Default: PyPdf for text-based PDFs
+        return DocumentLoaderPyPdf(), False, "pypdf"
+    
+    def _pdfHasText(self, path: str) -> bool:
+        """Check if PDF has selectable text"""
+        try:
+            import fitz
+            doc = fitz.open(path)
+            text = "".join(doc[i].get_text() for i in range(min(3, len(doc))))
+            doc.close()
+            return len(text.strip()) >= 50
+        except:
+            return False
 
 
 # Singleton instance
