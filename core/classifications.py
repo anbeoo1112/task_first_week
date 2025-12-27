@@ -1,8 +1,9 @@
-from typing import Dict, Optional, Type
+from typing import Dict, Optional, Type, List
 from extract_thinker import Classification, Contract
 from extract_thinker.models.classification_node import ClassificationNode
 from extract_thinker.models.classification_tree import ClassificationTree
 from contracts import IDENTITY_DOCS, VEHICLE_DOCS, FINANCE_DOCS
+from contracts import DOCUMENT_CATEGORIES
 
 # Category metadata for UI
 CATEGORY_META = {
@@ -26,7 +27,7 @@ def _buildNode(name: str, desc: str, docs: Dict) -> ClassificationNode:
         children=children
     )
 
-# Build the classification tree
+# Dựng cây phân loại
 CLASSIFICATION_TREE = ClassificationTree(nodes=[
     _buildNode("identity", "Giấy tờ tùy thân: CCCD, hộ chiếu, giấy khai sinh", IDENTITY_DOCS),
     _buildNode("vehicle", "Giấy tờ phương tiện: bằng lái, đăng ký xe, đăng kiểm", VEHICLE_DOCS),
@@ -37,6 +38,7 @@ CLASSIFICATION_TREE = ClassificationTree(nodes=[
     ),
 ])
 
+# Hàm tìm kiếm hợp đồng
 def getContractForDocType(categoryName: str, docTypeName: str) -> Optional[Type[Contract]]:
     for node in CLASSIFICATION_TREE.nodes:
         if node.name == categoryName:
@@ -45,7 +47,7 @@ def getContractForDocType(categoryName: str, docTypeName: str) -> Optional[Type[
                     return child.classification.contract
     return None
 
-# For UI display (sidebar)
+# Định nghĩa các loại giấy tờ cho UI display (sidebar)
 class Category:
     def __init__(self, name: str, icon: str, docs: Dict):
         self.name = name
@@ -58,7 +60,7 @@ CATEGORIES = {
     "finance": Category("finance", "💰", FINANCE_DOCS),
 }
 
-from typing import List
+# Hàm lấy danh sách các loại giấy tờ
 def getClassificationsList() -> List[Classification]:
     result = []
     for node in CLASSIFICATION_TREE.nodes:

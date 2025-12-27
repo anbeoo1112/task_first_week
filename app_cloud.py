@@ -1,7 +1,3 @@
-"""
-VN Document Cloud - Streamlit Web Application
-Modern UI for Vietnamese document processing
-"""
 import streamlit as st
 import os
 import tempfile
@@ -18,9 +14,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ─── Custom CSS ────────────────────────────────────────────────────────
+# ─── Styling ───────────────────────────────────────────────────────────
 
-st.markdown("""
+def loadCustomCss():
+    """Load custom CSS styles"""
+    st.markdown("""
 <style>
     /* Modern card styling */
     .stMetric {
@@ -61,10 +59,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# ─── Display Components ────────────────────────────────────────────────
 
-# ─── Display Functions (defined first) ─────────────────────────────────
-
-def display_data_item(key: str, value: Any):
+def displayDataItem(key: str, value: Any):
     """Display a single data item"""
     label = key.replace("_", " ").title()
     st.markdown(f"""
@@ -75,7 +72,7 @@ def display_data_item(key: str, value: Any):
     """, unsafe_allow_html=True)
 
 
-def display_data_cards(data: Dict[str, Any]):
+def displayDataCards(data: Dict[str, Any]):
     """Display data in nice card format"""
     items = [(k, v) for k, v in data.items() if v]
     
@@ -89,23 +86,17 @@ def display_data_cards(data: Dict[str, Any]):
     
     with col1:
         for key, value in items[:mid]:
-            display_data_item(key, value)
+            displayDataItem(key, value)
     
     with col2:
         for key, value in items[mid:]:
-            display_data_item(key, value)
+            displayDataItem(key, value)
 
+# ─── Result View Controllers ───────────────────────────────────────────
 
-def display_single_result(result: Dict[str, Any]):
+def displaySingleResult(result: Dict[str, Any]):
     """Display single document processing result"""
-    
-    if result.get("error"):
-        st.error("❌ Lỗi xử lý!")
-        st.warning(f"Chi tiết: {result['error']}")
-        st.info("💡 Vui lòng chờ 30 giây rồi thử lại nếu là Rate Limit.")
-        return
-    
-    # Success
+    # Success message
     st.success("✅ Xử lý thành công!")
     st.markdown("---")
     
@@ -114,8 +105,8 @@ def display_single_result(result: Dict[str, Any]):
     
     with col1:
         category = result.get("category")
-        cat_info = CATEGORIES.get(category) if category else None
-        icon = cat_info.icon if cat_info else "📄"
+        catInfo = CATEGORIES.get(category) if category else None
+        icon = catInfo.icon if catInfo else "📄"
         st.metric("📁 Nhóm", f"{icon} {category.title() if category else 'N/A'}")
     
     with col2:
@@ -133,7 +124,7 @@ def display_single_result(result: Dict[str, Any]):
             data = data.dict()
         
         if isinstance(data, dict):
-            display_data_cards(data)
+            displayDataCards(data)
             
             with st.expander("🔍 Xem JSON"):
                 st.json(data)
@@ -141,19 +132,9 @@ def display_single_result(result: Dict[str, Any]):
         st.warning("⚠️ Không trích xuất được dữ liệu")
 
 
-def display_multi_result(result: Dict[str, Any]):
+def displayMultiResult(result: Dict[str, Any]):
     """Display multi-document processing result"""
-    
-    if result.get("error"):
-        st.error("❌ Lỗi xử lý!")
-        st.warning(f"Chi tiết: {result['error']}")
-        return
-    
     documents = result.get("documents", [])
-    
-    if not documents:
-        st.warning("⚠️ Không phát hiện văn bản nào")
-        return
     
     st.success(f"✅ Phát hiện {len(documents)} văn bản!")
     st.markdown("---")
@@ -165,128 +146,124 @@ def display_multi_result(result: Dict[str, Any]):
             
             if data:
                 if isinstance(data, dict):
-                    display_data_cards(data)
+                    displayDataCards(data)
                 else:
                     st.write(data)
             else:
                 st.caption("Không có dữ liệu")
 
+def handleDisplayResults(result: Dict[str, Any]):
+    """Central logic to route result to correct display"""
+    if result.get("error"):
+        st.error("❌ Lỗi xử lý!")
+        st.warning(f"Chi tiết: {result['error']}")
+        return
 
-# ─── Sidebar ───────────────────────────────────────────────────────────
+    documents = result.get("documents", [])
+    
+    if len(documents) == 0:
+        st.warning("⚠️ Không phát hiện văn bản nào")
+        return
 
-with st.sidebar:
-    st.markdown("## 📄 VN Document")
-    st.markdown("---")
-    
-    st.markdown("### ⚡ Công nghệ")
-    st.caption("🔹 OCR: Google Document AI")
-    st.caption("🔹 LLM: Gemini 2.0 Flash")
-    st.caption("🔹 Độ chính xác: Cao")
-    
-    st.markdown("---")
-    st.markdown("### 📋 Văn bản hỗ trợ")
-    
-    for cat_key, category in CATEGORIES.items():
-        with st.expander(f"{category.icon} {cat_key.title()}"):
-            for code, (name, _) in category.docs.items():
-                st.markdown(f"• {name}")
-    
-    st.markdown("---")
-    
-    # Processing mode
-    st.markdown("### ⚙️ Chế độ xử lý")
-    process_mode = st.radio(
-        "Chọn chế độ:",
-        options=["single", "multi"],
-        format_func=lambda x: "📄 Đơn văn bản" if x == "single" else "📚 Nhiều văn bản",
-        help="Đơn: Xử lý 1 loại văn bản\nNhiều: Phát hiện nhiều loại trong 1 file"
-    )
+    # Logic chọn View hiển thị
+    if len(documents) == 1:
+        # Chế độ xem đơn
+        doc = documents[0]
+        displaySingleResult({
+            "category": doc.get("category"),
+            "doc_type": doc.get("docType"),
+            "data": doc.get("data"),
+            "confidence": doc.get("confidence"),
+            "_debug": doc.get("_debug")
+        })
+    else:
+        # Chế độ xem đa văn bản
+        displayMultiResult({
+            "documents": [
+                {
+                    "doc_type": d.get("docType"),
+                    "data": d.get("data"),
+                    "confidence": d.get("confidence")
+                }
+                for d in documents
+            ]
+        })
 
-# ─── Main Content ──────────────────────────────────────────────────────
+# ─── Main Application ──────────────────────────────────────────────────
 
-st.markdown("# 📄 Trích xuất thông tin văn bản")
-st.markdown("##### Nhận dạng và trích xuất thông tin từ giấy tờ Việt Nam")
-
-st.markdown("---")
-
-# File uploader
-uploaded_file = st.file_uploader(
-    "📎 Tải lên file (PDF hoặc ảnh)",
-    type=["pdf", "png", "jpg", "jpeg"],
-    help="Hỗ trợ PDF và các định dạng ảnh phổ biến"
-)
-
-if uploaded_file:
-    # File info
-    col1, col2, col3 = st.columns([2, 1, 1])
+def main():
+    loadCustomCss()
     
-    with col1:
-        st.info(f"📎 **{uploaded_file.name}**")
-    
-    with col2:
-        st.caption(f"📦 {uploaded_file.size / 1024:.1f} KB")
-    
-    with col3:
-        process_btn = st.button(
-            "🚀 Xử lý",
-            type="primary",
-            use_container_width=True
+    # --- Sidebar ---
+    with st.sidebar:
+        st.markdown("## 📄 VN Document")
+        st.markdown("---")
+        
+        st.markdown("### ⚡ Công nghệ")
+        st.caption("🔹 OCR: Google Document AI")
+        st.caption("🔹 LLM: Gemini 2.0 Flash")
+        st.caption("🔹 Độ chính xác: Cao")
+        
+        st.markdown("---")
+        st.markdown("### 📋 Văn bản hỗ trợ")
+        
+        for catKey, category in CATEGORIES.items():
+            with st.expander(f"{category.icon} {catKey.title()}"):
+                for code, (name, _) in category.docs.items():
+                    st.markdown(f"• {name}")
+        
+        st.markdown("---")
+        st.markdown("### ⚙️ Chế độ xử lý")
+        processMode = st.radio(
+            "Chọn chế độ:",
+            options=["single", "multi"],
+            format_func=lambda x: "📄 Đơn văn bản" if x == "single" else "📚 Nhiều văn bản",
+            help="Đơn: Xử lý 1 loại văn bản\nNhiều: Phát hiện nhiều loại trong 1 file"
         )
     
-    # Process file
-    if process_btn:
-        file_ext = os.path.splitext(uploaded_file.name)[1].lower()
+    # --- Main Content ---
+    st.markdown("# 📄 Trích xuất thông tin văn bản")
+    st.markdown("##### Nhận dạng và trích xuất thông tin từ giấy tờ Việt Nam")
+    st.markdown("---")
+
+    uploadedFile = st.file_uploader(
+        "📎 Tải lên file (PDF hoặc ảnh)",
+        type=["pdf", "png", "jpg", "jpeg"],
+        help="Hỗ trợ PDF và các định dạng ảnh phổ biến"
+    )
+
+    if uploadedFile:
+        # Info bar
+        col1, col2, col3 = st.columns([2, 1, 1])
+        with col1:
+            st.info(f"📎 **{uploadedFile.name}**")
+        with col2:
+            st.caption(f"📦 {uploadedFile.size / 1024:.1f} KB")
+        with col3:
+            processBtn = st.button("🚀 Xử lý", type="primary", use_container_width=True)
         
-        # Save to temp file
-        with tempfile.NamedTemporaryFile(delete=False, suffix=file_ext) as tmp:
-            tmp.write(uploaded_file.getvalue())
-            tmp_path = tmp.name
-        
-        try:
-            processor = DocumentProcessor()
+        # Process Action
+        if processBtn:
+            fileExt = os.path.splitext(uploadedFile.name)[1].lower()
+            with tempfile.NamedTemporaryFile(delete=False, suffix=fileExt) as tmp:
+                tmp.write(uploadedFile.getvalue())
+                tmpPath = tmp.name
             
-            with st.spinner("⏳ Đang xử lý với AI..."):
-                result = processor.run(tmp_path)
-                
-                # Debug: show raw result
-                # st.json(result)
-                
-                if result.get("error"):
-                    st.error(f"❌ Lỗi: {result['error']}")
-                else:
-                    documents = result.get("documents", [])
+            try:
+                processor = DocumentProcessor()
+                with st.spinner("⏳ Đang xử lý với AI..."):
+                    # Gọi pipeline với chế độ xử lý đã chọn
+                    result = processor.run(tmpPath, processingMode=processMode)
+                    # Hiển thị kết quả
+                    handleDisplayResults(result)
                     
-                    if len(documents) == 0:
-                        st.warning("⚠️ Không phát hiện văn bản nào")
-                    elif len(documents) == 1:
-                        # Single document
-                        doc = documents[0]
-                        display_single_result({
-                            "category": doc.get("category"),
-                            "doc_type": doc.get("docType"),
-                            "data": doc.get("data"),
-                            "confidence": doc.get("confidence"),
-                            "_debug": doc.get("_debug")
-                        })
-                    else:
-                        # Multiple documents
-                        display_multi_result({
-                            "documents": [
-                                {
-                                    "doc_type": d.get("docType"),
-                                    "data": d.get("data"),
-                                    "confidence": d.get("confidence")
-                                }
-                                for d in documents
-                            ]
-                        })
-        
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            st.error(f"❌ Lỗi: {str(e)}")
-        
-        finally:
-            # Cleanup
-            if os.path.exists(tmp_path):
-                os.remove(tmp_path)
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                st.error(f"❌ Lỗi: {str(e)}")
+            finally:
+                if os.path.exists(tmpPath):
+                    os.remove(tmpPath)
+
+if __name__ == "__main__":
+    main()

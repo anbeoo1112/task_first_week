@@ -14,12 +14,13 @@ class OcrConfig:
         '.png', '.jpg', '.jpeg', '.tiff', '.gif', '.bmp', '.webp'
     })
     
+    # Kiểm tra file có phải là file ảnh không
     def isImageFile(self, filePath: str) -> bool:
         """Check if file is an image based on extension"""
         ext = os.path.splitext(filePath)[1].lower()
         return ext in self.extensions
 
-
+#Lớp config cho DocumentAI
 @dataclass
 class DocumentAiConfig:
     projectId: str = field(default_factory=lambda: os.getenv("DOCUMENTAI_PROJECT_ID", ""))
@@ -27,6 +28,7 @@ class DocumentAiConfig:
     processorId: str = field(default_factory=lambda: os.getenv("DOCUMENTAI_PROCESSOR_ID", ""))
     credentialsPath: str = field(default_factory=lambda: os.getenv("DOCUMENTAI_GOOGLE_CREDENTIALS", "credentials.json"))
     
+    # Kiểm tra các tham số cần thiết
     def validate(self) -> List[str]:
         """Returns list of missing required fields"""
         missing = []
@@ -36,6 +38,7 @@ class DocumentAiConfig:
             missing.append("DOCUMENTAI_PROCESSOR_ID")
         return missing
     
+    # Tạo loader cho DocumentAI
     def createLoader(self):
         """Create a new DocumentLoaderGoogleDocumentAI instance"""
         from extract_thinker import DocumentLoaderGoogleDocumentAI, GoogleDocAIConfig
@@ -47,7 +50,7 @@ class DocumentAiConfig:
             credentials=self.credentialsPath,
         ))
 
-
+#Config cho Processing
 @dataclass
 class ProcessingConfig:
     model: str = field(default_factory=lambda: os.getenv("LLM_MODEL", "gemini/gemini-2.0-flash"))
@@ -56,12 +59,14 @@ class ProcessingConfig:
     enableThinking: bool = False
 
 
+#Config cho toàn bộ ứng dụng
 @dataclass
 class AppConfig:
     ocr: OcrConfig = field(default_factory=OcrConfig)
     documentAi: DocumentAiConfig = field(default_factory=DocumentAiConfig)
     processing: ProcessingConfig = field(default_factory=ProcessingConfig)
     
+    # Kiểm tra các tham số cần thiết
     def validate(self) -> None:
         missing = self.documentAi.validate()
         if missing:
@@ -70,6 +75,7 @@ class AppConfig:
                 "Please check your .env file"
             )
     
+    # Tạo loader phù hợp với loại file
     def createLoader(self, filePath: str):
         """
         Create appropriate loader based on file type.
@@ -90,6 +96,7 @@ class AppConfig:
         # Default: PyPdf for text-based PDFs
         return DocumentLoaderPyPdf(), False, "pypdf"
     
+    # Kiểm tra PDF có selectable text không
     def _pdfHasText(self, path: str) -> bool:
         """Check if PDF has selectable text"""
         try:
