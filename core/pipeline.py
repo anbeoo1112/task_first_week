@@ -9,14 +9,18 @@ from extract_thinker import (
 from core.config import config
 from core.classifications import getClassificationsList
 from core.utils import (
-    countPages, findCategory, sanitizePageGroups, 
+    countPages, findCategory, 
     makeSuccessResponse, makeErrorResponse
 )
 
 nest_asyncio.apply()
 
 class DocumentProcessor:
-    # Class xử lý tài liệu chính của hệ thống.
+    """
+    Bộ xử lý tài liệu trung tâm (Document Processor).
+    Chịu trách nhiệm điều phối toàn bộ luồng xử lý:     
+    Tải file -> Phân loại -> Tách trang -> Trích xuất dữ liệu.
+    """
     def __init__(self, model: Optional[str] = None, 
                  strategy: CompletionStrategy = CompletionStrategy.CONCATENATE):
         config.validate()
@@ -24,13 +28,21 @@ class DocumentProcessor:
         self._strategy = strategy
     
     def run(self, filePath: str) -> Dict:
-        # Hàm chính để xử lý tài liệu và trích xuất thông tin.
+        """
+        Thực thi luồng xử lý tài liệu chính.
         
-        # Args:
-        #     filePath (str): Đường dẫn tuyệt đối đến file cần xử lý.
+        Quy trình:
+        1. Kiểm tra file và khởi tạo Loader (Pypdf hoặc DocumentAI).
+        2. Đếm số trang để quyết định chiến lược xử lý.
+        3. Cấu hình Extractor (dùng chung cho cả luồng).
+        4. Điều hướng sang xử lý Đơn trang hoặc Đa trang.
+        
+        Args:
+            filePath (str): Đường dẫn tuyệt đối tới file tài liệu.
             
-        # Returns:
-        #     Dict: Kết quả trích xuất hoặc thông báo lỗi.
+        Returns:
+            Dict: Dictionary chứa danh sách tài liệu đã trích xuất hoặc thông báo lỗi.
+        """
         if not os.path.exists(filePath):
             return makeErrorResponse("File không tồn tại")
         
@@ -50,14 +62,21 @@ class DocumentProcessor:
             if pageCount == 1:
                 return self.extractSinglePage(extractor, filePath, vision, loaderName)
             
-            return self.extractMultiPage(filePath, vision, loaderName, pageCount)
+            return self.extractMultiPage(extractor, filePath, vision, loaderName, pageCount)
                 
         except Exception as e:
             traceback.print_exc()
             return makeErrorResponse(str(e)[:200])
     
     def extractSinglePage(self, extractor: Extractor, filePath: str, vision: bool, loaderName: str) -> Dict:
-        # Xử lý tài liệu đơn trang (Single Page).
+        """
+        Xử lý tài liệu Đơn trang (Single Page).
+        
+        Chiến lược:
+        - Không cần tách trang (Split).
+        - Gọi trực tiếp Extractor để Phân loại và Trích xuất.
+        - Tối ưu hiệu suất cho file nhỏ.
+        """
         # Phân loại tài liệu
         classifications = getClassificationsList()
         result = extractor.classify(filePath, classifications, vision=vision)
@@ -82,20 +101,27 @@ class DocumentProcessor:
             vision=vision
         )
     
-    def extractMultiPage(self, filePath: str, vision: bool, loaderName: str, pageCount: int) -> Dict:
-        # Xử lý tài liệu đa trang (Multi Page).
-        # Bao gồm các bước: Split (Tách trang) -> Sanitize (Sửa lỗi trang) -> Extract (Trích xuất).
+    def extractMultiPage(self, extractor: Extractor, filePath: str, vision: bool, loaderName: str, pageCount: int) -> Dict:
+        """
+        Xử lý tài liệu Đa trang (Multi Page / Mixed Documents).
+        
+        Chiến lược:
+        1. Sử dụng Process và Splitter để chia nhỏ file lớn thành các nhóm trang (Document Groups).
+        2. Phân loại từng nhóm trang.
+        3. Trích xuất dữ liệu cho từng nhóm.
+        
+        Lưu ý:
+        - Sử dụng lại Extractor đã khởi tạo để tiết kiệm tài nguyên.
+        - Có cơ chế Fallback từ ImageSplitter sang TextSplitter nếu cần.
+        """
+        # Bao gồm các bước: Split (Tách trang) -> Extract (Trích xuất).
         print("📄 Phát hiện tài liệu nhiều trang. Đang tiến hành tách (Splitting)...")
         
         # 1. Chuẩn bị Loader riêng biệt cho bước Split
         splitLoader, _, _ = config.createLoader(filePath)
         
-        extractor = Extractor()
-        extractor.load_llm(LLM(self._model))
-        
-        # Dummy loader cho extractor (cần thiết cho init)
-        dummyLoader, _, _ = config.createLoader(filePath)
-        extractor.load_document_loader(dummyLoader)
+        # Reuse extractor instance passed from run()
+        # No need to create new Extractor or load LLM again
         
         proc = Process()
         proc.load_document_loader(splitLoader)
@@ -128,18 +154,17 @@ class DocumentProcessor:
         groups = proc.doc_groups or []
         print(f"📊 Tìm thấy {len(groups)} nhóm tài liệu.")
         
-        # 3. Sửa lỗi phân trang (Validation & Correction)
-        sanitizePageGroups(groups, pageCount)
-
-        # 4. Trích xuất thông tin (Extract)
+        # 3. Trích xuất thông tin (Extract)
         print("📝 Đang trích xuất (Process.extract)...")
         
         try:
             results = proc.extract(vision=vision, completion_strategy=self._strategy)
             
             documents = []
+            
             for group, data in zip(groups, results):
                 dataDict = data.model_dump() if hasattr(data, 'model_dump') else data
+                
                 documents.append({
                     "category": findCategory(group.classification),
                     "docType": group.classification,

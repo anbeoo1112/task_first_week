@@ -25,34 +25,6 @@ def findCategory(docTypeName: str) -> Optional[str]:
                     return node.name
     return None
 
-def sanitizePageGroups(groups, maxPages: int) -> None:
-    """
-    Phát hiện và sửa lỗi 'ảo giác' số trang của Splitter.
-    Ví dụ: Tài liệu chỉ có 2 trang nhưng Splitter nhận diện trang 3.
-    Hàm này sẽ kẹp (clamp) số trang lại trong khoảng hợp lệ.
-    """
-    for group in groups:
-        if not hasattr(group, 'pages') or not group.pages:
-            continue
-        
-        originalPages = list(group.pages)
-        sanitizedPages = []
-        modified = False
-        
-        for p in group.pages:
-            # Splitter dùng 1-based index
-            if p > maxPages:
-                # Nếu trang vượt quá thực tế, gán bằng trang cuối cùng
-                sanitizedPages.append(maxPages)
-                modified = True
-            else:
-                sanitizedPages.append(p)
-        
-        if modified:
-            # Loại bỏ trùng lặp và giữ nguyên thứ tự
-            group.pages = list(dict.fromkeys(sanitizedPages))
-            print(f"   🔧 Sửa lỗi số trang: {originalPages} -> {group.pages}")
-
 def makeSuccessResponse(
     category: Optional[str] = None, 
     docType: Optional[str] = None, 
@@ -66,7 +38,7 @@ def makeSuccessResponse(
         "category": category, 
         "docType": docType, 
         "data": data,
-        "confidence": confidence, 
+        "confidence": confidence,
         "_debug": {"loader": loader, "vision": vision}
     }], "error": None}
 

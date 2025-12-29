@@ -196,34 +196,18 @@ def main():
     
     # --- Sidebar ---
     with st.sidebar:
-        st.markdown("## 📄 VN Document")
-        st.markdown("---")
-        
-        st.markdown("### ⚡ Công nghệ")
-        st.caption("🔹 OCR: Google Document AI")
-        st.caption("🔹 LLM: Gemini 2.0 Flash")
-        st.caption("🔹 Độ chính xác: Cao")
-        
-        st.markdown("---")
-        st.markdown("### 📋 Văn bản hỗ trợ")
+        st.markdown("## 📄 Document Extractor")
+
         
         for catKey, category in CATEGORIES.items():
             with st.expander(f"{category.icon} {catKey.title()}"):
                 for code, (name, _) in category.docs.items():
                     st.markdown(f"• {name}")
         
-        st.markdown("---")
-        st.markdown("### ⚙️ Chế độ xử lý")
-        processMode = st.radio(
-            "Chọn chế độ:",
-            options=["single", "multi"],
-            format_func=lambda x: "📄 Đơn văn bản" if x == "single" else "📚 Nhiều văn bản",
-            help="Đơn: Xử lý 1 loại văn bản\nNhiều: Phát hiện nhiều loại trong 1 file"
-        )
     
     # --- Main Content ---
-    st.markdown("# 📄 Trích xuất thông tin văn bản")
-    st.markdown("##### Nhận dạng và trích xuất thông tin từ giấy tờ Việt Nam")
+    st.markdown("# 📄 Document Extractor")
+    st.markdown("##### Nhận dạng và trích xuất thông tin từ giấy tờ")
     st.markdown("---")
 
     uploadedFile = st.file_uploader(
@@ -253,7 +237,7 @@ def main():
                 processor = DocumentProcessor()
                 with st.spinner("⏳ Đang xử lý với AI..."):
                     # Gọi pipeline với chế độ xử lý đã chọn
-                    result = processor.run(tmpPath, processingMode=processMode)
+                    result = processor.run(tmpPath)
                     # Hiển thị kết quả
                     handleDisplayResults(result)
                     

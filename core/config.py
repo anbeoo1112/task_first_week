@@ -85,15 +85,25 @@ class AppConfig:
         
         ext = os.path.splitext(filePath)[1].lower()
         
-        # Image or scanned PDF -> DocAI
-        if self.ocr.isImageFile(filePath) or (ext == '.pdf' and not self._pdfHasText(filePath)):
-            return self.documentAi.createLoader(), True, "docai"
+        # 1. Image files -> Use Document AI (OCR)
+        if self.ocr.isImageFile(filePath):
+            # Document AI handles OCR, no need for LLM vision
+            return self.documentAi.createLoader(), False, "docai"
         
-        # Excel files
+        # 2. Excel files
         if ext in EXCEL_EXT:
             return DocumentLoaderSpreadSheet(), False, "spreadsheet"
         
-        # Default: PyPdf for text-based PDFs
+        # 3. PDF files
+        if ext == '.pdf':
+            if self._pdfHasText(filePath):
+                # Native Text PDF -> No Vision
+                return DocumentLoaderPyPdf(), False, "pypdf"
+            else:
+                # Scanned PDF -> Enable VisionFor LLM (Gemini)
+                return DocumentLoaderPyPdf(), True, "pypdf_vision"
+        
+        # Default fallback
         return DocumentLoaderPyPdf(), False, "pypdf"
     
     # Kiểm tra PDF có selectable text không
