@@ -60,7 +60,7 @@ CATEGORIES = {
     "finance": Category("finance", "💰", FINANCE_DOCS),
 }
 
-# Hàm lấy danh sách các loại giấy tờ
+# Hàm lấy danh sách các loại giấy tờ (Flat List)
 def getClassificationsList() -> List[Classification]:
     result = []
     for node in CLASSIFICATION_TREE.nodes:
@@ -70,3 +70,8 @@ def getClassificationsList() -> List[Classification]:
         else:
             result.append(node.classification)
     return result
+
+# Hàm lấy cây phân loại (Tree) - Dùng cho Tree Classification
+def getClassificationsTree() -> ClassificationTree:
+    return CLASSIFICATION_TREE
+

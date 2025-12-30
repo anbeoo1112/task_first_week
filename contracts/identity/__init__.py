@@ -1,10 +1,9 @@
-from .cccd import VietnamCCCD
-from .passport import VietnamPassport
-from .birth_cert import VietnamBirthCert
+from .cccd import VietnamCCCD, CCCD_EXTRA_CONTENT
+from .passport import VietnamPassport, PASSPORT_EXTRA_CONTENT
+from .student_card import VietnamStudentCard, STUDENT_CARD_EXTRA_CONTENT
 
-# Document type mapping
 IDENTITY_DOCS = {
     "cccd": ("Căn cước công dân", VietnamCCCD),
-    "ho_chieu": ("Hộ chiếu", VietnamPassport),
-    "giay_khai_sinh": ("Giấy khai sinh", VietnamBirthCert),
+    "passport": ("Hộ chiếu", VietnamPassport),
+    "student_card": ("Thẻ sinh viên", VietnamStudentCard),
 }

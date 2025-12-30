@@ -1,48 +1,25 @@
-"""
-Contracts package - Vietnamese document schemas
-Export all document types for easy import
-"""
-# Identity documents
-from contracts.identity import (
-    VietnamCCCD,
-    VietnamPassport, 
-    VietnamBirthCert,
-    IDENTITY_DOCS
-)
+from contracts.identity import IDENTITY_DOCS, VietnamCCCD, VietnamPassport, VietnamStudentCard
+from contracts.identity import CCCD_EXTRA_CONTENT, PASSPORT_EXTRA_CONTENT, STUDENT_CARD_EXTRA_CONTENT
+from contracts.vehicle import VEHICLE_DOCS, VietnamDriverLicense, DRIVER_LICENSE_EXTRA_CONTENT
+from contracts.finance import FINANCE_DOCS, Invoice, INVOICE_EXTRA_CONTENT
 
-# Vehicle documents
-from contracts.vehicle import (
-    VietnamDriverLicense,
-    VietnamVehicleReg,
-    VietnamInspection,
-    VEHICLE_DOCS
-)
-
-# Finance documents
-from contracts.finance import (
-    VietnamContract,
-    VietnamBankTransfer,
-    FINANCE_DOCS
-)
-
-# All document categories
 DOCUMENT_CATEGORIES = {
-    "identity": ("Giấy tờ tùy thân", IDENTITY_DOCS),
-    "vehicle": ("Giấy tờ phương tiện", VEHICLE_DOCS),
-    "finance": ("Giấy tờ tài chính", FINANCE_DOCS),
+    "identity": IDENTITY_DOCS,
+    "vehicle": VEHICLE_DOCS,
+    "finance": FINANCE_DOCS,
 }
 
-# All contracts list (for Classification)
-ALL_CONTRACTS = [
-    # Identity
-    VietnamCCCD,
-    VietnamPassport,
-    VietnamBirthCert,
-    # Vehicle
-    VietnamDriverLicense,
-    VietnamVehicleReg,
-    VietnamInspection,
-    # Finance
-    VietnamContract,
-    VietnamBankTransfer,
-]
+ALL_CONTRACTS = {
+    **IDENTITY_DOCS,
+    **VEHICLE_DOCS,
+    **FINANCE_DOCS,
+}
+
+# Map contract -> extra_content
+EXTRA_CONTENTS = {
+    VietnamCCCD: CCCD_EXTRA_CONTENT,
+    VietnamPassport: PASSPORT_EXTRA_CONTENT,
+    VietnamStudentCard: STUDENT_CARD_EXTRA_CONTENT,
+    VietnamDriverLicense: DRIVER_LICENSE_EXTRA_CONTENT,
+    Invoice: INVOICE_EXTRA_CONTENT,
+}

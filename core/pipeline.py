@@ -1,185 +1,131 @@
 import os
 import nest_asyncio
-from typing import Dict, Optional
-import traceback
+from typing import Dict, Optional, Any
 
 from extract_thinker import (
-    Process, Extractor, ImageSplitter, TextSplitter, SplittingStrategy, CompletionStrategy, LLM
+    Extractor, CompletionStrategy, LLM
 )
+from extract_thinker.document_loader.document_loader_data import DocumentLoaderData
+
 from core.config import config
-from core.classifications import getClassificationsList
-from core.utils import (
-    countPages, findCategory, 
-    makeSuccessResponse, makeErrorResponse
-)
+from core.classifications import getClassificationsList, CLASSIFICATION_TREE
+
+def findCategory(docTypeName: str) -> Optional[str]:
+    """Tìm category (nhóm) dựa trên doc_type_name."""
+    for node in CLASSIFICATION_TREE.nodes:
+        if hasattr(node, 'children') and node.children:
+            for child in node.children:
+                if child.name == docTypeName:
+                    return node.name
+    return None
+
+def makeSuccessResponse(
+    category: Optional[str] = None, 
+    docType: Optional[str] = None, 
+    data: Any = None, 
+    confidence: Optional[float] = None, 
+    loader: str = "?", 
+    vision: bool = False
+) -> Dict:
+    """Tạo response thành công chuẩn hóa."""
+    return {"documents": [{
+        "category": category, 
+        "docType": docType, 
+        "data": data,
+        "confidence": confidence,
+        "_debug": {"loader": loader, "vision": vision}
+    }], "error": None}
+
+def makeErrorResponse(msg: str) -> Dict:
+    """Tạo response lỗi chuẩn hóa."""
+    return {"documents": [], "error": msg}
+
 
 nest_asyncio.apply()
 
+
 class DocumentProcessor:
     """
-    Bộ xử lý tài liệu trung tâm (Document Processor).
-    Chịu trách nhiệm điều phối toàn bộ luồng xử lý:     
-    Tải file -> Phân loại -> Tách trang -> Trích xuất dữ liệu.
+    Bộ xử lý tài liệu - Wrapper cho extract_thinker.
     """
+    
     def __init__(self, model: Optional[str] = None, 
                  strategy: CompletionStrategy = CompletionStrategy.CONCATENATE):
         config.validate()
         self._model = model or config.processing.model
         self._strategy = strategy
+        # Tạo LLM một lần duy nhất, dùng lại cho mọi request
+        self._llm = LLM(self._model)
+    
     
     def run(self, filePath: str) -> Dict:
-        """
-        Thực thi luồng xử lý tài liệu chính.
-        
-        Quy trình:
-        1. Kiểm tra file và khởi tạo Loader (Pypdf hoặc DocumentAI).
-        2. Đếm số trang để quyết định chiến lược xử lý.
-        3. Cấu hình Extractor (dùng chung cho cả luồng).
-        4. Điều hướng sang xử lý Đơn trang hoặc Đa trang.
-        
-        Args:
-            filePath (str): Đường dẫn tuyệt đối tới file tài liệu.
-            
-        Returns:
-            Dict: Dictionary chứa danh sách tài liệu đã trích xuất hoặc thông báo lỗi.
-        """
+        """Entry point chính - xử lý file trực tiếp, tắt vision."""
         if not os.path.exists(filePath):
             return makeErrorResponse("File không tồn tại")
         
         try:
-            # 1. Khởi tạo Loader và đếm số trang
-            loader, vision, loaderName = config.createLoader(filePath)
-            pageCount = countPages(filePath)
+            # 1. Load document (1 lần duy nhất)
+            loader, _, loaderName = config.createLoader(filePath)
+            pages = loader.load(filePath)
             
-            print(f"🔄 Đang xử lý: {loaderName}, vision={vision}, số trang={pageCount}")
+            print(f"🔄 Xử lý: {loaderName}, {len(pages) if isinstance(pages, list) else 1} trang (Pre-loaded)")
             
-            # 2. Cấu hình Extractor
-            extractor = Extractor()
-            extractor.load_document_loader(loader)
-            extractor.load_llm(LLM(self._model))
-            
-            # 3. Chọn chiến lược xử lý dựa trên số trang
-            if pageCount == 1:
-                return self.extractSinglePage(extractor, filePath, vision, loaderName)
-            
-            return self.extractMultiPage(extractor, filePath, vision, loaderName, pageCount)
+            # 2. Xử lý với content đã load
+            return self._process(pages, filePath, loaderName)
                 
         except Exception as e:
+            import traceback
             traceback.print_exc()
             return makeErrorResponse(str(e)[:200])
     
-    def extractSinglePage(self, extractor: Extractor, filePath: str, vision: bool, loaderName: str) -> Dict:
+    def _process(self, pages, filePath: str, loaderName: str) -> Dict:
         """
-        Xử lý tài liệu Đơn trang (Single Page).
+        Xử lý tài liệu với Extractor:
+        - Sử dụng DocumentLoaderData để xử lý content đã load (tránh đọc file 2 lần).
+        - Extractor tự động xử lý merge/paginate cho tài liệu nhiều trang.
+        """
+        # Setup Extractor với DocumentLoaderData (để nhận raw data)
+        extractor = Extractor()
+        extractor.load_document_loader(DocumentLoaderData())
+        extractor.load_llm(self._llm)
         
-        Chiến lược:
-        - Không cần tách trang (Split).
-        - Gọi trực tiếp Extractor để Phân loại và Trích xuất.
-        - Tối ưu hiệu suất cho file nhỏ.
-        """
-        # Phân loại tài liệu
+        # Phân loại (đưa pages vào trực tiếp)
         classifications = getClassificationsList()
-        result = extractor.classify(filePath, classifications, vision=vision)
+        result = extractor.classify(pages, classifications, vision=False)
+        confidence = getattr(result, 'confidence', None)
         
         if not result or result.name == "Other":
-            return makeSuccessResponse(category="Other", loader=loaderName, vision=vision)
+            return makeSuccessResponse(category="Other", loader=loaderName, vision=False)
         
+        # Trích xuất
         contract = result.classification.contract if result.classification else None
         data = None
         
-        # Trích xuất dữ liệu nếu tìm thấy Contract phù hợp
         if contract:
-            extractedObj = extractor.extract(filePath, contract, vision=vision, completion_strategy=self._strategy)
-            data = extractedObj.model_dump() if hasattr(extractedObj, 'model_dump') else extractedObj
+            print(f"📄 Loại: {result.name}. Trích xuất...")
+            
+            # Lấy extra_content
+            from contracts import EXTRA_CONTENTS
+            extra = EXTRA_CONTENTS.get(contract, None)
+            
+            # Extract (đưa pages vào trực tiếp, Extractor tự handle strategy)
+            extracted = extractor.extract(
+                pages, contract, 
+                vision=False,
+                content=extra, 
+                completion_strategy=self._strategy
+            )
+            data = extracted.model_dump() if hasattr(extracted, 'model_dump') else extracted
         
         return makeSuccessResponse(
             category=findCategory(result.name) or result.name,
             docType=result.name,
             data=data,
-            confidence=getattr(result, 'confidence', None),
+            confidence=confidence,
             loader=loaderName,
-            vision=vision
+            vision=False
         )
-    
-    def extractMultiPage(self, extractor: Extractor, filePath: str, vision: bool, loaderName: str, pageCount: int) -> Dict:
-        """
-        Xử lý tài liệu Đa trang (Multi Page / Mixed Documents).
-        
-        Chiến lược:
-        1. Sử dụng Process và Splitter để chia nhỏ file lớn thành các nhóm trang (Document Groups).
-        2. Phân loại từng nhóm trang.
-        3. Trích xuất dữ liệu cho từng nhóm.
-        
-        Lưu ý:
-        - Sử dụng lại Extractor đã khởi tạo để tiết kiệm tài nguyên.
-        - Có cơ chế Fallback từ ImageSplitter sang TextSplitter nếu cần.
-        """
-        # Bao gồm các bước: Split (Tách trang) -> Extract (Trích xuất).
-        print("📄 Phát hiện tài liệu nhiều trang. Đang tiến hành tách (Splitting)...")
-        
-        # 1. Chuẩn bị Loader riêng biệt cho bước Split
-        splitLoader, _, _ = config.createLoader(filePath)
-        
-        # Reuse extractor instance passed from run()
-        # No need to create new Extractor or load LLM again
-        
-        proc = Process()
-        proc.load_document_loader(splitLoader)
-        proc.add_classify_extractor([[extractor]])
-        
-        # Chọn Splitter phù hợp (Image hoặc Text)
-        splitter = ImageSplitter(self._model) if vision else TextSplitter(self._model)
-        proc.load_splitter(splitter)
-        proc.load_file(filePath)
-        
-        classifications = getClassificationsList()
-        for c in classifications:
-            c.extractor = extractor
-        
-        # 2. Thực hiện tách trang (Split)
-        # Sử dụng EAGER mode nếu ít trang, LAZY mode nếu nhiều trang để tối ưu
-        strategy = SplittingStrategy.EAGER if pageCount <= config.processing.eagerPageThreshold else SplittingStrategy.LAZY
-        
-        try:
-            proc.split(classifications, strategy=strategy)
-        except KeyError as e:
-            # Fallback: Nếu ImageSplitter lỗi (thường do file không có ảnh), thử lại bằng TextSplitter
-            if 'image' in str(e) and vision:
-                print("⚠️ Fallback sang TextSplitter do lỗi xử lý ảnh.")
-                proc.load_splitter(TextSplitter(self._model))
-                proc.split(classifications, strategy=strategy)
-            else:
-                raise e
-        
-        groups = proc.doc_groups or []
-        print(f"📊 Tìm thấy {len(groups)} nhóm tài liệu.")
-        
-        # 3. Trích xuất thông tin (Extract)
-        print("📝 Đang trích xuất (Process.extract)...")
-        
-        try:
-            results = proc.extract(vision=vision, completion_strategy=self._strategy)
-            
-            documents = []
-            
-            for group, data in zip(groups, results):
-                dataDict = data.model_dump() if hasattr(data, 'model_dump') else data
-                
-                documents.append({
-                    "category": findCategory(group.classification),
-                    "docType": group.classification,
-                    "data": dataDict,
-                    "confidence": getattr(group, 'confidence', None),
-                    "_debug": {"loader": loaderName, "vision": vision, "pages": len(group.pages)}
-                })
-                print(f"   ✅ Đã trích xuất: {group.classification}")
-                
-            return {"documents": documents, "error": None}
-            
-        except Exception as e:
-            print(f"❌ Lỗi Process.extract: {e}")
-            traceback.print_exc()
-            return {"documents": [], "error": f"Lỗi xử lý: {str(e)}"}
 
-# Alias để tương thích ngược nếu cần
+
+# Alias cho backward compatibility
 DocumentAIProcessor = DocumentProcessor

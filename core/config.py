@@ -53,7 +53,7 @@ class DocumentAiConfig:
 #Config cho Processing
 @dataclass
 class ProcessingConfig:
-    model: str = field(default_factory=lambda: os.getenv("LLM_MODEL", "gemini/gemini-2.0-flash"))
+    model: str = field(default_factory=lambda: os.getenv("LLM_MODEL", "gemini/gemini-2.5-flash"))
     eagerPageThreshold: int = 10
     dpi: int = 300
     enableThinking: bool = False
@@ -100,8 +100,9 @@ class AppConfig:
                 # Native Text PDF -> No Vision
                 return DocumentLoaderPyPdf(), False, "pypdf"
             else:
-                # Scanned PDF -> Enable VisionFor LLM (Gemini)
-                return DocumentLoaderPyPdf(), True, "pypdf_vision"
+                # Scanned PDF -> Use Document AI (Superior OCR)
+                # Thay vì dùng PyPDF + Vision (Gemini), ta dùng DocAI chuyên dụng
+                return self.documentAi.createLoader(), False, "docai_pdf"
         
         # Default fallback
         return DocumentLoaderPyPdf(), False, "pypdf"
@@ -117,6 +118,22 @@ class AppConfig:
             return len(text.strip()) >= 50
         except:
             return False
+    
+    # Tạo Extractor đã cấu hình sẵn (loader + LLM)
+    def createExtractor(self, filePath: str):
+        """
+        Create a fully configured Extractor for the given file.
+        Returns: (extractor, vision, loaderName)
+        """
+        from extract_thinker import Extractor, LLM
+        
+        loader, vision, loaderName = self.createLoader(filePath)
+        
+        extractor = Extractor()
+        extractor.load_document_loader(loader)
+        extractor.load_llm(LLM(self.processing.model))
+        
+        return extractor, vision, loaderName
 
 
 # Singleton instance

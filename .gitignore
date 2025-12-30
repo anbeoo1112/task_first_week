@@ -3,7 +3,6 @@
 .env.*
 !.env.example
 credentials.json
-*.json
 !package.json
 !tsconfig.json
 
@@ -40,3 +39,9 @@ test/*.jpg
 # Misc
 *.log
 .DS_Store
+!evaluation/**/*.json
+
+# Large folders
+extract_thinker/
+dataset/
+dataset.zip
