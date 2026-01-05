@@ -1,0 +1,595 @@
+[
+  {
+    "file": "dl112_jpg.rf.9642989f769e88e25fdea40a02f7555b.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 2830.48,
+      "data": {
+        "so_gplx": "MH02 20170037958",
+        "ho_ten": "KIMBERLY RENEE SHAH",
+        "ngay_sinh": "20-02-1978",
+        "quoc_tich": "THE UNION OF INDIA",
+        "hang": "MCWG",
+        "ngay_cap": "18-08-2017",
+        "ngay_het_han": "28-06-2017",
+        "noi_cap": "MH02"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1558.01,
+      "data": {
+        "so_gplx": "MH02 20170037958",
+        "ho_ten": "KIMBERLY RENEE SHAH",
+        "ngay_sinh": "20-02-1978",
+        "quoc_tich": null,
+        "hang": "MCWG",
+        "ngay_cap": "18-08-2017",
+        "ngay_het_han": "28-06-2017",
+        "noi_cap": "MH02"
+      }
+    }
+  },
+  {
+    "file": "dl113_jpg.rf.b60a197dce64fc0da32b012ddfce8ee2.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 3529.71,
+      "data": {
+        "so_gplx": "UK07-2011 001296",
+        "ho_ten": "KARAN GUPTA",
+        "ngay_sinh": "13-12-2000",
+        "quoc_tich": "INDIA",
+        "hang": "",
+        "ngay_cap": "03-07-2017",
+        "ngay_het_han": "02-07-2037",
+        "noi_cap": ""
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1371.39,
+      "data": {
+        "so_gplx": "UK07-2011 001296",
+        "ho_ten": "KARAN GUPTA",
+        "ngay_sinh": "13-12-2000",
+        "quoc_tich": "INDIA",
+        "hang": null,
+        "ngay_cap": "103-07-2017",
+        "ngay_het_han": "02-07-2037",
+        "noi_cap": "UNION OF INDIA"
+      }
+    }
+  },
+  {
+    "file": "dl114_jpg.rf.568338193b362786c79e8c02bd085bc2.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 3035.94,
+      "data": {
+        "so_gplx": "DL 9420050073",
+        "ho_ten": "Dr. STAR VISHWANATH IYAR",
+        "ngay_sinh": "26-07-1982",
+        "quoc_tich": "Indian",
+        "hang": "MCWG (NT), LMV (NT)",
+        "ngay_cap": "21-08-2006",
+        "ngay_het_han": "20-08-2026",
+        "noi_cap": null
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1379.91,
+      "data": {
+        "so_gplx": "DL 9420050073",
+        "ho_ten": "Dr. STAR VISHWANATH IYAR",
+        "ngay_sinh": "26-07-1982",
+        "quoc_tich": "INDIAN",
+        "hang": "MCWG (NT), LMV (NT)",
+        "ngay_cap": "21-08-2006",
+        "ngay_het_han": "20-08-2026",
+        "noi_cap": null
+      }
+    }
+  },
+  {
+    "file": "dl115_jpg.rf.158aaca381c174ca0df1d7cd6163d789.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 2346.66,
+      "data": {
+        "so_gplx": "TN54 20080001214",
+        "ho_ten": "SARAVANAKUMAR V",
+        "ngay_sinh": "20/06/1985",
+        "quoc_tich": "Indian",
+        "hang": "G",
+        "ngay_cap": "21/04/2008",
+        "ngay_het_han": null,
+        "noi_cap": "Tamilnadu, India"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1300.54,
+      "data": {
+        "so_gplx": "TN54 20080001214",
+        "ho_ten": "SARAVANAKUMAR V",
+        "ngay_sinh": "20/06/1985",
+        "quoc_tich": null,
+        "hang": null,
+        "ngay_cap": "21/04/2008",
+        "ngay_het_han": null,
+        "noi_cap": "Tamilnadu"
+      }
+    }
+  },
+  {
+    "file": "dl116_jpg.rf.41876cb3c182d1f2954186e6ab759a2e.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 3189.28,
+      "data": {
+        "so_gplx": "AP03120160001440",
+        "ho_ten": "LEONID MASSOV ALEXANDER",
+        "ngay_sinh": null,
+        "quoc_tich": "Indian",
+        "hang": null,
+        "ngay_cap": "09/02/2016",
+        "ngay_het_han": null,
+        "noi_cap": "RTA VISHAKAPATNAM"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1199.7,
+      "data": {
+        "so_gplx": "AP03120160001440",
+        "ho_ten": "LEONID MASSOV ALEXANDER",
+        "ngay_sinh": null,
+        "quoc_tich": "INDIAN",
+        "hang": null,
+        "ngay_cap": "09/02/2016",
+        "ngay_het_han": null,
+        "noi_cap": "RTA VISHAKAPATNAM"
+      }
+    }
+  },
+  {
+    "file": "dl117_jpg.rf.3abbfb75baceaa44e22cbf403e4154a4.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 2569.03,
+      "data": {
+        "so_gplx": "JK-02 2000 0121679",
+        "ho_ten": "BAWA DITTA SHARMA",
+        "ngay_sinh": null,
+        "quoc_tich": "Indian",
+        "hang": null,
+        "ngay_cap": "10-04-2000",
+        "ngay_het_han": "27-07-2023",
+        "noi_cap": "PTO JAMMU"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1297.72,
+      "data": {
+        "so_gplx": "JK-02 2000 0121679",
+        "ho_ten": "BAWA DITTA SHARMA",
+        "ngay_sinh": null,
+        "quoc_tich": "INDIAN",
+        "hang": null,
+        "ngay_cap": "10-04-2000",
+        "ngay_het_han": "27-07-2023",
+        "noi_cap": "PTO JAMMU"
+      }
+    }
+  },
+  {
+    "file": "dl118_jpg.rf.cd22a1aedc4d82967763a7a62ab3c261.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 2189.92,
+      "data": {
+        "so_gplx": null,
+        "ho_ten": "Name",
+        "ngay_sinh": "11/09/1997",
+        "quoc_tich": "INDIAN UNION",
+        "hang": "Category",
+        "ngay_cap": "12/09/2018",
+        "ngay_het_han": "22/01/2036",
+        "noi_cap": "KERALA STATE"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1232.88,
+      "data": {
+        "so_gplx": null,
+        "ho_ten": null,
+        "ngay_sinh": "11/09/1997",
+        "quoc_tich": "INDIAN UNION",
+        "hang": null,
+        "ngay_cap": "12/09/2018",
+        "ngay_het_han": "22/01/2036",
+        "noi_cap": "KERALA STATE"
+      }
+    }
+  },
+  {
+    "file": "dl119_jpg.rf.5f443d9e7783e815d388eadf73ab918d.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 3293.26,
+      "data": {
+        "so_gplx": null,
+        "ho_ten": "RAJAMMA",
+        "ngay_sinh": "01/06/1947",
+        "quoc_tich": "INDIAN UNION, KERALA STATE",
+        "hang": "Non-Transport, Transport",
+        "ngay_cap": "23/03/2018",
+        "ngay_het_han": "14/03/2023",
+        "noi_cap": null
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1271.17,
+      "data": {
+        "so_gplx": null,
+        "ho_ten": "RAJAMMA",
+        "ngay_sinh": "01/06/1947",
+        "quoc_tich": "INDIAN",
+        "hang": null,
+        "ngay_cap": "15/03/2018",
+        "ngay_het_han": "14/03/2023",
+        "noi_cap": "KERALA STATE"
+      }
+    }
+  },
+  {
+    "file": "dl11_jpg.rf.da5484f001d3c06674074a7c4a29a35d.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 1824.88,
+      "data": {
+        "so_gplx": "W.B7320150272868",
+        "ho_ten": "AMIT SINGH",
+        "ngay_sinh": null,
+        "quoc_tich": null,
+        "hang": null,
+        "ngay_cap": "04.06.15",
+        "ngay_het_han": "03.06.35",
+        "noi_cap": null
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1187.95,
+      "data": {
+        "so_gplx": "W.B7320150272868",
+        "ho_ten": "AMIT SINGH",
+        "ngay_sinh": null,
+        "quoc_tich": null,
+        "hang": null,
+        "ngay_cap": "04.06.15",
+        "ngay_het_han": "03.06.35",
+        "noi_cap": null
+      }
+    }
+  },
+  {
+    "file": "dl120_jpg.rf.49b59c5baf63925406a97e726f5d4b21.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 2750.86,
+      "data": {
+        "so_gplx": "DL-0420110149646",
+        "ho_ten": "ANURAG",
+        "ngay_sinh": "09/02/1976",
+        "quoc_tich": "India",
+        "hang": "INVCRG",
+        "ngay_cap": "01/03/2011",
+        "ngay_het_han": "08/02/2026",
+        "noi_cap": "Delhi Transport Department"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1365.91,
+      "data": {
+        "so_gplx": "DL-0420110149646",
+        "ho_ten": "ANURAG",
+        "ngay_sinh": "09/02/1976",
+        "quoc_tich": null,
+        "hang": null,
+        "ngay_cap": "01/03/2011",
+        "ngay_het_han": "08/02/2026",
+        "noi_cap": "Delhi"
+      }
+    }
+  },
+  {
+    "file": "dl121_jpg.rf.dafb39f4d700ea726f33a78f4c27a934.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 3191.46,
+      "data": {
+        "so_gplx": "BR-2820020039384",
+        "ho_ten": "PRAMOD KR. CHAURASIA",
+        "ngay_sinh": "05-01-1974",
+        "quoc_tich": "INDIAN",
+        "hang": "MCWG LMV NT Only",
+        "ngay_cap": "05-04-2002",
+        "ngay_het_han": "13-09-2018",
+        "noi_cap": "DIOGOPALGAN"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1361.75,
+      "data": {
+        "so_gplx": "BR-2820020039384",
+        "ho_ten": "PRAMOD KR. CHAURASIA",
+        "ngay_sinh": "05-01-1974",
+        "quoc_tich": null,
+        "hang": "MCWG LMV NT",
+        "ngay_cap": "05-04-2002",
+        "ngay_het_han": "13-09-2018",
+        "noi_cap": "GOPALGANJ"
+      }
+    }
+  },
+  {
+    "file": "dl123_jpg.rf.c3f97c7caccfea0f43388ca2251c41c8.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 2829.9,
+      "data": {
+        "so_gplx": "W.B 762012003",
+        "ho_ten": "DINESH THAKURI",
+        "ngay_sinh": "10%",
+        "quoc_tich": null,
+        "hang": "B",
+        "ngay_cap": "19.04.2016",
+        "ngay_het_han": "18.04.2024",
+        "noi_cap": "Daneeling"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1382.89,
+      "data": {
+        "so_gplx": "W.B 762012003",
+        "ho_ten": "DINESH THAKURI",
+        "ngay_sinh": null,
+        "quoc_tich": null,
+        "hang": "B",
+        "ngay_cap": "19.04.2016",
+        "ngay_het_han": "18.04.2024",
+        "noi_cap": "Daneeling"
+      }
+    }
+  },
+  {
+    "file": "0559fec2-646f-4225-b4bd-5f73dc908493_jpeg.rf.f264aafe1f65d2c33269e133518052d0.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 3755.84,
+      "data": {
+        "so_gplx": "AS26 20180001038",
+        "ho_ten": "KARAN WARY",
+        "ngay_sinh": "19-12-1999",
+        "quoc_tich": "Indian",
+        "hang": "LMV, MCWG",
+        "ngay_cap": "20-02-2018",
+        "ngay_het_han": "19-02-2038",
+        "noi_cap": "Chirang. B.T.A.D.. Assam"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1386.17,
+      "data": {
+        "so_gplx": "AS26 20180001038",
+        "ho_ten": "KARAN WARY",
+        "ngay_sinh": "19-12-1999",
+        "quoc_tich": "INDIAN",
+        "hang": "LMV, MCWG",
+        "ngay_cap": "20-02-2018",
+        "ngay_het_han": "19-02-2038",
+        "noi_cap": "Chirang. B.T.A.D.. Assam"
+      }
+    }
+  },
+  {
+    "file": "0_DL11_0404_-90_jpg.rf.fa44f8e31b7ed00ffb9acead2cbbb7d8.txt",
+    "prompt_mode": {
+      "success": false,
+      "time_ms": 2912.3,
+      "error": "Failed to extract from source: Failed to parse thinking output: 1 validation error for VietnamDriverLicense\nhang\n  Input should be a valid string [type=string_type, input_value=['COV', 'LMV'], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.12/v/string_type\nInput text was: Okay, I need to extract the following fields from the given text: so_gplx, ho_ten, ngay_sinh, quoc_tich, hang, ngay_cap, ngay_het_han, and noi_cap.\n\nHere's how I'll approach it:\n\n*   **so_gplx (DL No)..."
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1357.44,
+      "data": {
+        "so_gplx": "MH40 20100020994",
+        "ho_ten": "HARISH GAYDHANE",
+        "ngay_sinh": "23-06-1988",
+        "quoc_tich": null,
+        "hang": "COV, LMV",
+        "ngay_cap": "29-07-2010",
+        "ngay_het_han": "28-07-2030",
+        "noi_cap": "MH40 201077"
+      }
+    }
+  },
+  {
+    "file": "0_DL12_0404_1_jpg.rf.fac239036caf47f8c3d19ea824ccbda7.txt",
+    "prompt_mode": {
+      "success": false,
+      "time_ms": 3801.23,
+      "error": "Failed to extract from source: Failed to parse thinking output: 1 validation error for VietnamDriverLicense\nhang\n  Input should be a valid string [type=string_type, input_value=['COV', 'LMV', 'MCWG'], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.12/v/string_type\nInput text was: \nThe provided content appears to be an image of an Indian driver's license. I need to extract the following fields:\n- so_gplx (DL No)\n- ho_ten (Name)\n- ngay_sinh (DOB)\n- quoc_tich (Not explicitly pres..."
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1418.15,
+      "data": {
+        "so_gplx": "MH02 20120037319",
+        "ho_ten": "PRATEEK BISHT",
+        "ngay_sinh": "11-07-1989",
+        "quoc_tich": "INDIA",
+        "hang": "LMV",
+        "ngay_cap": "22-06-2012",
+        "ngay_het_han": "21-06-2032",
+        "noi_cap": "MAHARASHTRA STATE MOTOR DRIVING OCENGR"
+      }
+    }
+  },
+  {
+    "file": "0_DL12_0404_blur_jpg.rf.98ff542ea6291aa628a2f4cb44154bf0.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 3631.17,
+      "data": {
+        "so_gplx": "MH02 20120037319",
+        "ho_ten": "PRATEEK BISHT",
+        "ngay_sinh": "11-07-1989",
+        "quoc_tich": "INDIA",
+        "hang": "COV, LMV, MCWG",
+        "ngay_cap": "22-06-2012",
+        "ngay_het_han": "21-06-2032",
+        "noi_cap": "MH02 2012311"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1374.7,
+      "data": {
+        "so_gplx": "MH02 20120037319",
+        "ho_ten": "PRATEEK BISHT",
+        "ngay_sinh": "11-07-1989",
+        "quoc_tich": "INDIA",
+        "hang": "COV, LMV, MCWG",
+        "ngay_cap": "22-06-2012",
+        "ngay_het_han": "21-06-2032",
+        "noi_cap": "MH02"
+      }
+    }
+  },
+  {
+    "file": "0_DL12_0404_gamma_jpg.rf.23d0d3909da602c19cb4def7eee02ab1.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 2269.99,
+      "data": {
+        "so_gplx": "MH02 20120037319",
+        "ho_ten": "PRATEEK BISHT",
+        "ngay_sinh": "11-07-1989",
+        "quoc_tich": "INDIA",
+        "hang": "COV, LMV, MCWG",
+        "ngay_cap": "22-06-2012",
+        "ngay_het_han": "21-06-2032",
+        "noi_cap": "MH02 2012311"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1465.57,
+      "data": {
+        "so_gplx": "MH02 20120037319",
+        "ho_ten": "PRATEEK BISHT",
+        "ngay_sinh": "11-07-1989",
+        "quoc_tich": "INDIA",
+        "hang": "COV, LMV, MCWG",
+        "ngay_cap": "22-06-2012",
+        "ngay_het_han": "21-06-2032",
+        "noi_cap": "MH02"
+      }
+    }
+  },
+  {
+    "file": "0_DL12_0404_noisy_jpg.rf.eae271796459abda3496bae1bcfaa114.txt",
+    "prompt_mode": {
+      "success": false,
+      "time_ms": 3650.56,
+      "error": "Failed to extract from source: Failed to parse thinking output: 1 validation error for VietnamDriverLicense\nhang\n  Input should be a valid string [type=string_type, input_value=['COV', 'LMV', 'MCWG'], input_type=list]\n    For further information visit https://errors.pydantic.dev/2.12/v/string_type\nInput text was: \nThe provided content appears to be an image of an Indian driver's license. I need to extract the following fields:\n- so_gplx (DL No)\n- ho_ten (Name)\n- ngay_sinh (DOB)\n- quoc_tich (Not explicitly pres..."
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1457.45,
+      "data": {
+        "so_gplx": "MH02 20120037319",
+        "ho_ten": "PRATEEK BISHT",
+        "ngay_sinh": "11-07-1989",
+        "quoc_tich": null,
+        "hang": "COV\nLMV\nMCWG",
+        "ngay_cap": "22-06-2012",
+        "ngay_het_han": "21-06-2032",
+        "noi_cap": "MH02 2012311"
+      }
+    }
+  },
+  {
+    "file": "0_DL13_0404_90_jpg.rf.123551bb7b70e3ed6f9d9e8570054dea.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 3490.54,
+      "data": {
+        "so_gplx": "MH17 20150022164",
+        "ho_ten": "PRAJAKTA KADAM",
+        "ngay_sinh": "02-07-1992",
+        "quoc_tich": null,
+        "hang": "COV, MCWG, LMV",
+        "ngay_cap": "16-11-2015",
+        "ngay_het_han": "15-11-2035",
+        "noi_cap": "MH17 201568C"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1467.89,
+      "data": {
+        "so_gplx": "MH17 20150022164",
+        "ho_ten": "PRAJAKTA KADAM",
+        "ngay_sinh": "02-07-1992",
+        "quoc_tich": "INDIA",
+        "hang": "COV, MCWG, LMV",
+        "ngay_cap": "16-11-2015",
+        "ngay_het_han": "15-11-2035",
+        "noi_cap": "MH17 201568C"
+      }
+    }
+  },
+  {
+    "file": "0_DL13_0404_rescale_jpg.rf.d56a0fd44d984da2e220cf8e6af21d61.txt",
+    "prompt_mode": {
+      "success": true,
+      "time_ms": 2401.95,
+      "data": {
+        "so_gplx": "MH17 20150022164",
+        "ho_ten": "PRAJAKTA KADAM",
+        "ngay_sinh": "02-07-1992",
+        "quoc_tich": "INDIA",
+        "hang": "COV, MCWG, LMV",
+        "ngay_cap": "16-11-2015",
+        "ngay_het_han": "15-11-2035",
+        "noi_cap": "MAHARASHTRA STATE"
+      }
+    },
+    "tool_mode": {
+      "success": true,
+      "time_ms": 1375.5,
+      "data": {
+        "so_gplx": "MH17 20150022164",
+        "ho_ten": "PRAJAKTA KADAM",
+        "ngay_sinh": "02-07-1992",
+        "quoc_tich": "INDIA",
+        "hang": "MCWG, LMV, COV",
+        "ngay_cap": "16-11-2015",
+        "ngay_het_han": "15-11-2035",
+        "noi_cap": "MH17"
+      }
+    }
+  }
+]

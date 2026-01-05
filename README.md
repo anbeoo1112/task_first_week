@@ -1,48 +1,48 @@
-# VN Document - Vietnamese Document Processing
+# VN Document - Xử Lý Tài Liệu Tiếng Việt
 
-> Intelligent document processing for Vietnamese identity, vehicle, and financial documents.
+> Xử lý tài liệu thông minh cho các loại giấy tờ tùy thân, phương tiện và tài chính của Việt Nam.
 
-## 🚀 Quick Start
+## 🚀 Bắt đầu nhanh
 
 ```bash
-# Install dependencies
+# Cài đặt thư viện dependencies
 pip install -r requirements.txt
 
-# Configure environment
+# Cấu hình môi trường
 cp .env.example .env
-# Edit .env with your Google Cloud credentials
+# Chỉnh sửa file .env với thông tin Google Cloud credentials của bạn
 
-# Run the app
+# Chạy ứng dụng
 streamlit run app_cloud.py
 ```
 
-If you prefer the legacy file name, you can also use:
+Nếu bạn muốn dùng tên file cũ, bạn có thể chạy lệnh:
 
 ```bash
 pip install -r requirement.txt
 ```
 
-## 📁 Project Structure
+## 📁 Cấu trúc dự án
 
 ```
 task_first_week/
 ├── core/
 │   ├── __init__.py      # Package exports
-│   ├── config.py        # Centralized configuration
+│   ├── config.py        # Cấu hình tập trung
 │   ├── loaders.py       # Document loader factory
-│   ├── classifications.py # Document type definitions
-│   └── pipeline.py      # Main processing engine
+│   ├── classifications.py # Định nghĩa các loại tài liệu
+│   └── pipeline.py      # Engine xử lý chính
 ├── contracts/
-│   ├── identity.py      # CCCD, Passport, Birth cert
-│   ├── vehicle.py       # Driver license, Vehicle reg
-│   └── finance.py       # Contracts, Bank transfers
-├── app_cloud.py         # Streamlit web interface
-└── .env                 # Environment configuration
+│   ├── identity.py      # CCCD, Hộ chiếu, Giấy khai sinh
+│   ├── vehicle.py       # Bằng lái, Đăng ký xe, Đăng kiểm
+│   └── finance.py       # Hợp đồng, Chuyển khoản
+├── app_cloud.py         # Giao diện web Streamlit
+└── .env                 # Cấu hình môi trường
 ```
 
-## ⚙️ Configuration
+## ⚙️ Cấu hình
 
-Required environment variables in `.env`:
+Các biến môi trường bắt buộc trong `.env`:
 
 ```bash
 DOCUMENTAI_PROJECT_ID=your-project-id
@@ -50,21 +50,21 @@ DOCUMENTAI_PROCESSOR_ID=your-processor-id
 DOCUMENTAI_GOOGLE_CREDENTIALS=credentials.json
 GEMINI_API_KEY=your-gemini-key
 
-# Optional
+# Tùy chọn
 MAX_PDF_PAGES=3
 ```
 
-## 📄 Supported Documents
+## 📄 Các loại tài liệu hỗ trợ
 
-| Category | Documents |
+| Danh mục | Tài liệu |
 |----------|-----------|
-| 🪪 Identity | CCCD, Passport, Birth Certificate |
-| 🚗 Vehicle | Driver License, Vehicle Registration, Inspection |
-| 💰 Finance | Contracts, Bank Transfers |
+| 🪪 Giấy tờ tùy thân | CCCD, Hộ chiếu, Giấy khai sinh |
+| 🚗 Phương tiện | Giấy phép lái xe, Đăng ký xe, Đăng kiểm |
+| 💰 Tài chính | Hợp đồng, Ủy nhiệm chi / Chuyển khoản |
 
-## 🔧 Usage
+## 🔧 Cách sử dụng
 
-### Single Document
+### Xử lý một tài liệu
 
 ```python
 from core import DocumentProcessor
@@ -81,7 +81,7 @@ print(result)
 # }
 ```
 
-### Multi-Document PDF
+### Xử lý PDF nhiều loại giấy tờ (Multi-Document)
 
 ```python
 result = processor.run_multi("path/to/mixed_documents.pdf")
@@ -96,7 +96,7 @@ print(result)
 # }
 ```
 
-## 🛠️ Technologies
+## 🛠️ Công nghệ sử dụng
 
 - **OCR**: Google Document AI
 - **LLM**: Gemini 2.0 Flash
