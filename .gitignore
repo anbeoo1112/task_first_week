@@ -45,3 +45,8 @@ test/*.jpg
 extract_thinker/
 dataset/
 dataset.zip
+
+# Benchmark results
+benchmark_results/
+benchmark_ocr_report.json
+benchmark_details.csv
